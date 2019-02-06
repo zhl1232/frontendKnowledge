@@ -190,11 +190,13 @@ export default {
   },
   computed: {
     compiledMarkdown: function() {
+			// markdown渲染计算
       return marked(this.input, { sanitize: true })
     }
   },
   methods: {
     mark() {
+			// markdown插件配置
       let renderMD = new marked.Renderer()
       marked.setOptions({
         renderer: renderMD,
@@ -211,7 +213,9 @@ export default {
       let myChart = this.$echarts.init(document.getElementById('main'))
       let that = this
       myChart.on('click', function(params) {
-        if (!params.data.file) {
+        if (params.data.children) { // 如果不是最终子节点
+          return
+        } else if (!params.data.file) {
           // 如果没有文章
           that.$message({
             message: '暂时没有相关文章',
@@ -225,7 +229,7 @@ export default {
           that.dialogVisible = true
         }
       })
-      let option = {
+      let option = { // 树配置
         tooltip: {
           trigger: 'item',
           triggerOn: 'mousemove'
@@ -267,10 +271,6 @@ export default {
             animationDurationUpdate: 750
           }
         ]
-        // 	myChart.on('click', function(params) {
-        //   // 控制台打印数据的名称
-        //   console.log(params)
-        // })
       }
       myChart.hideLoading()
       myChart.setOption(option)
