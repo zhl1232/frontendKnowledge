@@ -1,6 +1,7 @@
 # knowledge
 
 > A Vue.js project
+> 重构前端知识构架
 
 ## Build Setup
 
