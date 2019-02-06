@@ -86,7 +86,8 @@ export default {
                 name: '语义',
                 children: [
                   {
-                    name: 'FlareVis'
+										name: '语义化标签',
+										file: 'yuyi1'
                   }
                 ]
               }
@@ -191,7 +192,7 @@ export default {
   computed: {
     compiledMarkdown: function() {
 			// markdown渲染计算
-      return marked(this.input, { sanitize: true })
+      return marked(this.input, { sanitize: false })
     }
   },
   methods: {
@@ -204,7 +205,7 @@ export default {
         tables: true,
         breaks: false,
         pedantic: false,
-        sanitize: false,
+        sanitize: false, // 忽略任何已经输入的html代码（标签）
         smartLists: true,
         smartypants: false
       })
@@ -221,12 +222,13 @@ export default {
             message: '暂时没有相关文章',
             type: 'warning'
           })
-        } else {
+        } else {				
           // 树分支末端点击事件
           that.title = params.name
           // 根据点击file名字,动态拿markdown文件内容
           that.input = require(`../article/${params.data.file}.md`)
-          that.dialogVisible = true
+					that.dialogVisible = true
+					console.log(that.compiledMarkdown);
         }
       })
       let option = { // 树配置
