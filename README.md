@@ -1,8 +1,7 @@
 # knowledge
 
-> A Vue.js project
 > 重构前端知识构架
-
+[预览地址](https://zhl1232.github.io/knowledgeStructure/)
 ## Build Setup
 
 ``` bash
