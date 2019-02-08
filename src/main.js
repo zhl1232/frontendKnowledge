@@ -4,12 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import echarts from 'echarts';
-import { Button, Dialog } from 'element-ui'
+import { Button, Dialog, Message } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.prototype.$echarts = echarts; 
 Vue.use(Button)
 Vue.use(Dialog)
+Vue.prototype.$message = Message
 
 Vue.config.productionTip = false
 
