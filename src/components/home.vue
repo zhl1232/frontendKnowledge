@@ -215,7 +215,12 @@ export default {
         pedantic: false,
         sanitize: false, // 忽略任何已经输入的html代码（标签）
         smartLists: true,
-        smartypants: false
+        smartypants: false,
+        highlight: function(code, lang) {
+          // console.log('code', code)
+          // return   hljs.highlight(lang, code, false,true).value;
+          return hljs.highlightAuto(code).value
+        }
       })
     },
     Chart() {
@@ -237,7 +242,7 @@ export default {
           // 根据点击file名字,动态拿markdown文件内容
           that.input = require(`../article/${params.data.file}.md`)
           that.dialogVisible = true
-          console.log(that.compiledMarkdown)
+          // console.log(that.compiledMarkdown)
         }
       })
       let option = {
@@ -292,7 +297,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 h1,
 h2 {
   font-weight: normal;
@@ -307,5 +312,15 @@ li {
 }
 a {
   color: #42b983;
+}
+pre {
+	background: #252525;
+	padding: 10px 0;
+	border-radius: 8px;
+}
+blockquote {
+	border-left: 3px solid #ffa986;
+	padding-left: 5px;
+	margin-left: 1em;
 }
 </style>
