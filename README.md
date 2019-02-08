@@ -1,7 +1,7 @@
 # knowledge
 
 > 重构前端知识构架
-[预览地址](https://zhl1232.github.io/knowledgeStructure/)
+[预览地址](https://zhl1232.github.io/frontendKnowledgeStructure/)
 ## Build Setup
 
 ``` bash

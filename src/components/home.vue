@@ -44,8 +44,16 @@ export default {
                         name: '类型',
                         children: [
                           {
+                            name: '基本类型',
+                            file: 'leixing1'
+                          },
+                          {
+                            name: '类型转换',
+                            file: 'leixing2'
+                          },
+                          {
                             name: '对象',
-                            file: 'test'
+                            file: 'leixing3'
                           }
                         ]
                       },
@@ -86,8 +94,8 @@ export default {
                 name: '语义',
                 children: [
                   {
-										name: '语义化标签',
-										file: 'yuyi1'
+                    name: '语义化标签',
+                    file: 'yuyi1'
                   }
                 ]
               }
@@ -191,13 +199,13 @@ export default {
   },
   computed: {
     compiledMarkdown: function() {
-			// markdown渲染计算
+      // markdown渲染计算
       return marked(this.input, { sanitize: false })
     }
   },
   methods: {
     mark() {
-			// markdown插件配置
+      // markdown插件配置
       let renderMD = new marked.Renderer()
       marked.setOptions({
         renderer: renderMD,
@@ -214,7 +222,8 @@ export default {
       let myChart = this.$echarts.init(document.getElementById('main'))
       let that = this
       myChart.on('click', function(params) {
-        if (params.data.children) { // 如果不是最终子节点
+        if (params.data.children) {
+          // 如果不是最终子节点
           return
         } else if (!params.data.file) {
           // 如果没有文章
@@ -222,16 +231,17 @@ export default {
             message: '暂时没有相关文章',
             type: 'warning'
           })
-        } else {				
+        } else {
           // 树分支末端点击事件
           that.title = params.name
           // 根据点击file名字,动态拿markdown文件内容
           that.input = require(`../article/${params.data.file}.md`)
-					that.dialogVisible = true
-					console.log(that.compiledMarkdown);
+          that.dialogVisible = true
+          console.log(that.compiledMarkdown)
         }
       })
-      let option = { // 树配置
+      let option = {
+        // 树配置
         tooltip: {
           trigger: 'item',
           triggerOn: 'mousemove'
