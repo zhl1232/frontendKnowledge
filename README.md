@@ -1,7 +1,7 @@
 # knowledge
 
 > 重构前端知识构架
-[预览地址](https://zhl1232.github.io/frontendKnowledgeStructure/)
+[预览地址](https://zhl1232.github.io/frontendKnowledge/)
 
 对于前端开发者来说，目前针对前端的系统教育几乎是完全缺失的。导致前端工程师对前端的知识体系和底层原理没有真正系统地理解。自己查找学习资料的时候，又没办法把零碎的知识点串成线，形成自己的知识体系。甚至网上很多知识都是缺失错误的。
 
