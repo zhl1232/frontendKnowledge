@@ -46,13 +46,13 @@ export default {
                           {
                             name: '基本类型',
                             file: 'leixing1'
-                          },
-                          {
-                            name: '类型转换',
+													},
+													{
+                            name: '对象',
                             file: 'leixing2'
                           },
                           {
-                            name: '对象',
+                            name: '类型转换',
                             file: 'leixing3'
                           }
                         ]
@@ -298,16 +298,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-h1,
+/* h1,
 h2 {
   font-weight: normal;
-}
+} */
 ul {
-  list-style-type: none;
-  padding: 0;
+  padding: 10px;
 }
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 a {
@@ -315,12 +313,16 @@ a {
 }
 pre {
 	background: #252525;
-	padding: 10px 0;
+	padding: 10px 15px;
 	border-radius: 8px;
 }
 blockquote {
 	border-left: 3px solid #ffa986;
 	padding-left: 5px;
 	margin-left: 1em;
+}
+table, tr, th, td {
+	border:1px solid;
+	border-collapse:collapse; 
 }
 </style>
