@@ -45,15 +45,15 @@ export default {
                         children: [
                           {
                             name: '基本类型',
-                            file: 'leixing1'
+                            file: 'type1'
 													},
 													{
                             name: '对象',
-                            file: 'leixing2'
+                            file: 'type2'
                           },
                           {
                             name: '类型转换',
-                            file: 'leixing3'
+                            file: 'type3'
                           }
                         ]
                       },
@@ -95,7 +95,7 @@ export default {
                 children: [
                   {
                     name: '语义化标签',
-                    file: 'yuyi1'
+                    file: 'semantic1'
                   }
                 ]
               }
@@ -298,10 +298,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-/* h1,
-h2 {
-  font-weight: normal;
-} */
+
+h1,h2,h3 {
+	color: #000;
+}
 ul {
   padding: 10px;
 }
@@ -323,6 +323,7 @@ blockquote {
 }
 table, tr, th, td {
 	border:1px solid;
+	padding: 5px 10px;
 	border-collapse:collapse; 
 }
 </style>
