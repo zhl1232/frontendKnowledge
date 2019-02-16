@@ -291,3 +291,9 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 这里我们给对象 o 添加了 Symbol.iterator 属性，并且按照迭代器的要求定义了一个 0 到 10 的迭代器，之后我们就可以在 for of 中愉快地使用这个 o 对象啦。
 
 这些标准中被称为“众所周知”的 Symbol，也构成了语言的一类接口形式。它们允许编写与语言结合更紧密的 API。
+
+参考链接
+
+[numberInJavaScript](http://www.yangshengdonghome.com/2016/06/19/numberInJavaScript/)
+
+[重学前端](https://time.geekbang.org/column/154)

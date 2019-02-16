@@ -129,3 +129,8 @@ body 里面有自己的 header 和 footer，然后里面是竖篇的 article，�
 - 自然语言表达能力的补充；
 - 文章标题摘要；
 - 适合机器阅读的整体结构。
+
+
+参考链接
+
+[重学前端](https://time.geekbang.org/column/154)

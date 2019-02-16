@@ -318,3 +318,8 @@ null == undefined   // true
 ' \t\r\n ' == 0     // true
 ```
 因此建议不要使用相等运算符（\=\=），最好显式转换数据类型，使用严格相等运算符（\=\=\=）。
+
+参考链接
+
+[《JavaScript 标准参考教程（alpha）》 by 阮一峰](http://javascript.ruanyifeng.com/)
+
