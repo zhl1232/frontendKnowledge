@@ -224,7 +224,7 @@ console.log(object2.obj.b)  // 'newString'
 - 属性的描述符（descriptor）无法被复制，一个只读的属性在拷贝对象中可能会是可写的。
 - 如果属性是对象的话，原对象的属性会与拷贝对象的属性会指向一个对象，会彼此影响。
 
-```
+```javascript
 function Parent() {
 	this.name = 'parent'
 	this.a = 1
