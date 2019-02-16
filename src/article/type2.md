@@ -223,6 +223,7 @@ console.log(object2.obj.b)  // 'newString'
 - 原对象从它的原型继承的属性也会被拷贝到新对象中，就像是原对象的属性一样，无法区分。
 - 属性的描述符（descriptor）无法被复制，一个只读的属性在拷贝对象中可能会是可写的。
 - 如果属性是对象的话，原对象的属性会与拷贝对象的属性会指向一个对象，会彼此影响。
+
 ```
 function Parent() {
 	this.name = 'parent'
@@ -258,7 +259,6 @@ console.log( child2.name ); // newName
 // 查看 child1 和 child2 的原型，我们也会发现它们的原型也是不同的
 console.log(child1.__proto__);  // Parent
 console.log(child2.__proto__);  // Object
-
 ```
 #### 深拷贝
 
@@ -269,12 +269,15 @@ console.log(child2.__proto__);  // Object
 
 ##### 对象浅拷贝
 1. Object.assign()
+  
 ```
 var object2 = Object.assign({}, object1);
 ```
+
 2. Object.getOwnPropertyNames 拷贝不可枚举的属性
 
 Object.getOwnPropertyNames() 返回由对象属性组成的一个数组，包括不可枚举的属性（除了使用 Symbol 的属性）。
+
 ```
 function shallowCopyOwnProperties( source )  
 {
@@ -285,9 +288,10 @@ function shallowCopyOwnProperties( source )
     }
     return target ;
 }
-
 ```
+
 3. Object.getPrototypeOf 和 Object.getOwnPropertyDescriptor 拷贝原型与描述符
+
 ```
 function shallowCopy( source ) {
     // 用 source 的原型创建一个对象
@@ -302,8 +306,10 @@ function shallowCopy( source ) {
     return target ;
 }
 ```
+
 ##### 数组浅拷贝
 1. 直接复制或者遍历
+
 ```
 var array = [1, 'string', {a: 1,b: 2, obj: {c: 3}}];
 // 直接复制
@@ -322,7 +328,9 @@ console.log(array1[2].c); // 4
 console.log(array2[1]); // string
 console.log(array2[2].c); // 4
 ```
+
 2. slice 和 concat 
+   
 ```
 var array = [1, 'string', {a: 1,b: 2, obj: {c: 3}}];
 // slice()
@@ -338,8 +346,10 @@ console.log(array1[2].c); // 4
 console.log(array2[1]); // string
 console.log(array2[2].c); // 4
 ```
+
 ##### 数组、对象的深拷贝
 1.  JSON.stringify 和 JSON.parse
+
 ```
 var obj = { a: 1, b: { c: 2 }};
 // 深拷贝
@@ -350,11 +360,13 @@ obj.b.c = 20;
 console.log(obj); // { a: 1, b: { c: 20 } }
 console.log(newObj); // { a: 1, b: { c: 2 } }
 ```
+
 优点是方便简洁，可以处理大多数业务需求。
 
 缺点是属性里有function、undefined和symbol的话会被忽略。并且如果值有循环引用对象的话会报错。
 2. MessageChannel
 如果你所需拷贝的对象含有内置类型并且不包含函数，可以用MessageChannel
+
 ```
 function structuralClone(obj) {
   return new Promise(resolve => {
@@ -373,11 +385,13 @@ var obj = {a: 1, b: {
   const clone = await structuralClone(obj)
 })()
 ```
+
 3. 其他
 
 手写或者用[ lodash 的深拷贝函数](https://lodash.com/docs##cloneDeep)
 ### typeOf和instanceof
 typeof可以判断除了null的所有原始类型
+
 ```
 typeof 1 // 'number'
 typeof '1' // 'string'
@@ -385,13 +399,17 @@ typeof undefined // 'undefined'
 typeof true // 'boolean'
 typeof Symbol() // 'symbol'
 ```
+
 但是不能判断对象，除了函数都会显示object
+
 ```
 typeof [] // 'object'
 typeof {} // 'object'
 typeof console.log // 'function'
 ```
+
 instanceof 内部是通过原型链来判断的
+
 ```
 const Person = function() {}
 const p1 = new Person()
@@ -404,6 +422,7 @@ str instanceof String // false
 var str1 = new String('hello world')
 str1 instanceof String // true
 ```
+
 在上篇文章《基本类型》里说过，
 
 > 在 JavaScript 中，没有任何方法可以更改私有的 Class 属性，因此 Object.prototype.toString 是可以准确识别对象对应的基本类型的方法，它比 instanceof 更加准确。
@@ -411,6 +430,7 @@ str1 instanceof String // true
 > instanceof 的判定如果在两个环境下可能会出错。比如网页内嵌 iframe。
 
 而且 instanceof 的行为是可以自定义修改的。
+
 ```
 class PrimitiveString {
   static [Symbol.hasInstance](x) {
@@ -419,7 +439,6 @@ class PrimitiveString {
 }
 console.log('hello world' instanceof PrimitiveString) // true
 ```
-
 
 参考链接
 
