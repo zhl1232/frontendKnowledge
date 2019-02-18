@@ -24,7 +24,7 @@ Symbol 函数比较特殊，直接用 new 调用它会抛出错误，但它仍�
 
 前文提到，全局的 Symbol 函数无法使用 new 来调用，但我们仍可以利用装箱机制来得到一个 Symbol 对象，我们可以利用一个函数的 call 方法来强迫产生装箱。
 
-```
+```js
     var symbolObject = (function(){ return this; }).call(Symbol("a"));
 
     console.log(typeof symbolObject); // object
@@ -34,7 +34,7 @@ Symbol 函数比较特殊，直接用 new 调用它会抛出错误，但它仍�
 
 使用内置的 Object 函数，我们可以在 JavaScript 代码中显式调用装箱能力。
 
-```
+```javascript
     var symbolObject = Object((Symbol("a"));
 
     console.log(typeof symbolObject); // object
@@ -47,7 +47,7 @@ Symbol 函数比较特殊，直接用 new 调用它会抛出错误，但它仍�
 
 每一类对象（包括装箱对象）皆有私有的 Class 属性，这些属性可以用 Object.prototype.toString 获取：
 
-```
+```js
     var symbolObject = Object((Symbol("a"));
 
     console.log(Object.prototype.toString.call(symbolObject)); //[object Symbol]
@@ -63,7 +63,7 @@ instanceof 的判定如果在两个环境下可能会出错。比如网页内嵌
 
 在 JavaScript 标准中，规定了 ToPrimitive 函数，它是对象类型到基本类型的转换（即，拆箱转换）。
 
-```
+```js
 [Symbol.toPrimitive](hint)
 ```
 
@@ -73,7 +73,7 @@ instanceof 的判定如果在两个环境下可能会出错。比如网页内嵌
 
 number
 
-```
+```js
     var o = {
         valueOf : () => {console.log("valueOf"); return {}},
         toString : () => {console.log("toString"); return {}}
@@ -87,7 +87,7 @@ number
 
 string
 
-```
+```js
     var o = {
         valueOf : () => {console.log("valueOf"); return {}},
         toString : () => {console.log("toString"); return {}}
@@ -101,7 +101,7 @@ string
 
 当在希望是字符串操作，也即发生对象到字符串的转换时，传入内部函数 ToPrimitive 的参数值即为 string，当在希望是数值操作，传入内部函数 ToPrimitive 的参数值即为 number，当在一些不确定需要将对象转换成什么基础类型的场景下，传入内部函数 ToPrimitive 的参数值即为 default：
 
-```
+```js
 	const b = {
 			[Symbol.toPrimitive] (hint) {
 					console.log(`hint: ${hint}`);
@@ -126,7 +126,7 @@ string
 
 在 ES6 之后，还允许对象通过显式指定 @@toPrimitive Symbol 来覆盖原有的行为。
 
-```
+```js
     var o = {
         valueOf : () => {console.log("valueOf"); return {}},
         toString : () => {console.log("toString"); return {}}
@@ -148,7 +148,7 @@ null 代表赋值了，但内容为空，undefined 表示未定义。
 
 一般建议用 void 0 代替 undefined ，因为在 ES5 之前 undefined 是一个变量，而并非是一个关键字，为了避免无意中被修改，建议用 void 0 代替 undefined
 
-```
+```js
     let a
     // 我们也可以这样判断 undefined
     a  = undefined
@@ -163,7 +163,7 @@ null 代表赋值了，但内容为空，undefined 表示未定义。
 
 ### Boolean
 
-```
+```js
     console.log(true  = new Boolean(true));  // false
 
 ```
@@ -192,7 +192,7 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 
 小数位是 52 位（二进制），换算为十进制则只能百分百能保证 15 位。超过该精度（二进制 52 位，十进制 15 位）的小数运算将会被截取，造成精度损失和计算结果的不准确。
 
-```
+```js
 	console.log( 0.000000000000001 <= Number.EPSILON ); // false
 	console.log( 0.0000000000000001 <= Number.EPSILON ); // true
 
@@ -201,7 +201,7 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 所以 JavaScript 提供的最小精度值 Number.EPSILON 为 2.220446049250313e-16 也就是
 小于 16 位小数(10 进制)。
 
-```
+```js
 	console.log( 2.220446049250313e-16.toString(2) );
 	// 0.0000000000000000000000000000000000000000000000000001
 	// 52位小数(2进制)
@@ -219,7 +219,7 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 
   0.1 二进制计算过程
 
-```
+```js
 	0.1*2=0.2========取出整数部分0
 	0.2*2=0.4========取出整数部分0
 	0.4*2=0.8========取出整数部分0
@@ -270,7 +270,7 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 
 ### symbol
 
-```
+```js
 	var o = new Object
 
 	o[Symbol.iterator] = function() {

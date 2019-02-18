@@ -14,7 +14,7 @@ Object（对象）在英文中，是一切事物的总称，这和面向对象�
 - 对象具有行为：即对象的状态，可能因为它的行为产生变迁。
 
 javascript的对象唯一标识性
-```
+```js
     var o1 = { a: 1 };
     var o2 = { a: 1 };
     console.log(o1 == o2); // false
@@ -23,7 +23,7 @@ javascript的对象唯一标识性
 
 在 JavaScript 中，将状态和行为统一抽象为“属性”。
 
-```
+```js
     var o = { 
         d: 1,
         f() {
@@ -56,7 +56,7 @@ javascript的对象唯一标识性
 
 访问器属性使得属性在读和写时执行代码，它允许使用者在写和读属性时，得到完全不同的值。
 
-```
+```js
 var o = {
   a: 7,
   get b() { 
@@ -74,7 +74,7 @@ console.log(o.a); // 25
 ```
 
 我们通常用于定义属性的代码会产生数据属性，其中的 writable、enumerable、configurable 都默认为 true。我们可以使用内置函数 Object.getOwnPropertyDescripter 来查看，如以下代码所示：
-```
+```js
     var o = { a: 1 };
     o.b = 2;
     //a 和 b 皆为数据属性
@@ -82,7 +82,7 @@ console.log(o.a); // 25
     Object.getOwnPropertyDescriptor(o,"b") // {value: 2, writable: true, enumerable: true, configurable: true}
 ```
 如果我们要想改变属性的特征，或者定义访问器属性，我们可以使用 Object.defineProperty，示例如下：
-```
+```js
     var o = { a: 1 };
     Object.defineProperty(o, "b", {value: 2, writable: false, enumerable: false, configurable: true});
     //a 和 b 都是数据属性，但特征值变化了
@@ -102,7 +102,7 @@ console.log(o.a); // 25
 
 ![image](asstes/images/type2.png)
 
-```
+```js
 const a = {}
 let b = a
 a.c = 666
@@ -124,7 +124,7 @@ console.log(b.c)  // 666
 javascript 中所有函数参数都是按值传递，都是把形参复制给实参，只是基本数据类型复制的是原始值，而引用类型复制的是堆内存的地址。
 
 #### 基本类型传值
-```
+```js
 let a = 1
 function foo(x) {
     x = 2
@@ -137,7 +137,7 @@ console.log(a)  // 1
 
 #### 引用类型传值
 
-```
+```js
 let a = {
     abc: 1
 }
@@ -153,7 +153,7 @@ console.log(a.abc)   // 2
 对象a的引用被传递到函数foo内部， 函数内部变量x指向全局变量a，从而实现了引用的传递，所以变量x和变量a读写的是同一个对象。
 
 如果是按引用传递那下面这个例子就懵比了：
-```
+```js
 let a = {
     abc: 1
 }
@@ -173,7 +173,7 @@ foo 函数执行时， 形参 x 的值是传进去的对象 a 的内存地址引
 
 <strong>所以对 x 的赋值会改变上下文栈中标识符 x 保存的具体值</strong>
 
-```
+```js
 let a = {
     abc: 1
 }
@@ -192,7 +192,7 @@ console.log(a) // {abc: 99}
 上面说过引用类型变量拷贝的特点。但是实际业务中，有时需要将一个引用类型拷贝一份，并且两个对象的值还不会相互影响。
 
 这里存在两种情况：浅拷贝和深拷贝
-```
+```js
 let object1 = {
   a: 1,
   obj: {
@@ -206,7 +206,7 @@ let object1 = {
 - 直接拷贝对象，也就是拷贝引用，两个变量object1 和 object2 之间还是会相互影响。
 - 只是简单的拷贝对象的第一层属性，基本类型值不再相互影响，但是对其内部的引用类型值，拷贝的任然是是其引用，内部的引用类型值还是会相互影响。
 
-```
+```js
 // 最简单的浅拷贝
 let object2 = object1;  // 两个对象指向一个引用地址，改一个另一个也会改变
 
@@ -270,7 +270,7 @@ console.log(child2.__proto__);  // Object
 ##### 对象浅拷贝
 1. Object.assign()
   
-```
+```js
 var object2 = Object.assign({}, object1);
 ```
 
@@ -278,7 +278,7 @@ var object2 = Object.assign({}, object1);
 
 Object.getOwnPropertyNames() 返回由对象属性组成的一个数组，包括不可枚举的属性（除了使用 Symbol 的属性）。
 
-```
+```js
 function shallowCopyOwnProperties( source )  
 {
     var target = {} ;
@@ -292,7 +292,7 @@ function shallowCopyOwnProperties( source )
 
 3. Object.getPrototypeOf 和 Object.getOwnPropertyDescriptor 拷贝原型与描述符
 
-```
+```js
 function shallowCopy( source ) {
     // 用 source 的原型创建一个对象
     var target = Object.create( Object.getPrototypeOf( source )) ;
@@ -310,7 +310,7 @@ function shallowCopy( source ) {
 ##### 数组浅拷贝
 1. 直接复制或者遍历
 
-```
+```js
 var array = [1, 'string', {a: 1,b: 2, obj: {c: 3}}];
 // 直接复制
 var array1 = array;
@@ -331,7 +331,7 @@ console.log(array2[2].c); // 4
 
 2. slice 和 concat 
    
-```
+```js
 var array = [1, 'string', {a: 1,b: 2, obj: {c: 3}}];
 // slice()
 var array1 = array.slice();
@@ -350,7 +350,7 @@ console.log(array2[2].c); // 4
 ##### 数组、对象的深拷贝
 1.  JSON.stringify 和 JSON.parse
 
-```
+```js
 var obj = { a: 1, b: { c: 2 }};
 // 深拷贝
 var newObj = JSON.parse(JSON.stringify(obj));
@@ -367,7 +367,7 @@ console.log(newObj); // { a: 1, b: { c: 2 } }
 2. MessageChannel
 如果你所需拷贝的对象含有内置类型并且不包含函数，可以用MessageChannel
 
-```
+```js
 function structuralClone(obj) {
   return new Promise(resolve => {
     const {port1, port2} = new MessageChannel();
@@ -392,7 +392,7 @@ var obj = {a: 1, b: {
 ### typeOf和instanceof
 typeof可以判断除了null的所有原始类型
 
-```
+```js
 typeof 1 // 'number'
 typeof '1' // 'string'
 typeof undefined // 'undefined'
@@ -402,7 +402,7 @@ typeof Symbol() // 'symbol'
 
 但是不能判断对象，除了函数都会显示object
 
-```
+```js
 typeof [] // 'object'
 typeof {} // 'object'
 typeof console.log // 'function'
@@ -410,7 +410,7 @@ typeof console.log // 'function'
 
 instanceof 内部是通过原型链来判断的
 
-```
+```js
 const Person = function() {}
 const p1 = new Person()
 p1 instanceof Person // true
@@ -431,7 +431,7 @@ str1 instanceof String // true
 
 而且 instanceof 的行为是可以自定义修改的。
 
-```
+```js
 class PrimitiveString {
   static [Symbol.hasInstance](x) {
     return typeof x === 'string'

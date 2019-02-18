@@ -54,7 +54,11 @@ export default {
                           {
                             name: '类型转换',
                             file: 'type3'
-                          }
+													},
+													{
+														name: '原型',
+                            file: 'type4'
+													}
                         ]
                       },
                       {
