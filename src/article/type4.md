@@ -125,8 +125,43 @@ Object.prototype.toString.call(Promise.resolve()); // "[object Promise]"
 
 1. 一个继承自 Foo.prototype 的新对象被创建。
 2. 使用指定的参数调用构造函数 Foo ，并将 this 绑定到新创建的对象。new Foo 等同于 new Foo()，也就是没有指定参数列表，Foo 不带任何参数调用的情况。
-3. 由构造函数返回的对象就是 new 表达式的结果。如果构造函数没有显式返回一个对象，则使用步骤1创建的对象。（一般情况下，构造函数不返回值，但是用户可以选择主动返回对象，来覆盖正常的对象创建步骤）
+3. 如果构造函数返回了一个“对象”，那么这个对象会取代整个new出来的结果。如果构造函数没有返回对象，那么new出来的结果为步骤1创建的对象，ps：一般情况下构造函数不返回任何值，不过用户如果想覆盖这个返回值，可以自己选择返回一个普通对象来覆盖。当然，返回数组也会覆盖，因为数组也是对象。
+<!-- 3. 由构造函数返回的对象就是 new 表达式的结果。如果构造函数没有显式返回一个对象，则使用步骤1创建的对象。（一般情况下，构造函数不返回值，但是用户可以选择主动返回对象，来覆盖正常的对象创建步骤） -->
+<!-- MDN文档里的这句不太容易理解,换一句 -->
 
+```js
+var fun = function(){
+this.name = 'peter';
+	return {
+		name: 'jack'
+	};
+}
+var p = new fun();  
+console.log(p.name)  // jack
+// construct 返回对象.所以p的值是返回的对象
+
+var fun = function(){
+	this.name = 'peter';
+	return 'jack';
+}
+var p = new fun();  
+console.log(p.name)  // peter
+// construct 返回的不是对象.所以p的值是Object.create(fun)的对象,也就是new出来本身的对象
+```
+
+所谓的"私有"也就是这样创建出来的
+
+```js
+function cls(){
+    this.a = 100;
+    return {
+        getValue:() => this.a
+    }
+}
+var o = new cls;
+o.getValue(); //100
+//a 在外面永远无法访问到,因为返回的是一个对象.所以构造函数new的对象会被覆盖,只能通过返回的getValue获取
+```
 > someObject.[[Prototype]] 符号是用于指向 someObject的原型。从 ECMAScript 6 开始，[[Prototype]] 可以通过Object.getPrototypeOf()和Object.setPrototypeOf()访问器来访问。这个等同于 JavaScript 的非标准但许多浏览器实现的属性 '\_\_proto\_\_'。也就是私有属性[[ Prototype ]]会指向prototype，但不是prototype。
 
 new运算符其实是想让函数对象在语法上跟类变得相似，也就是模拟基于类的面向对象。
@@ -173,6 +208,9 @@ o2.p2();
 - 对象的 \_\_proto\_\_ 属性指向原型， \_\_proto\_\_ 将对象和原型连接起来组成了原型链
 
 原型链的终点为null，因为规范中原型链必须是有限长度(从任一节点出发，经过有限步骤后必须到达一个终点。也不能有环。)
+
+
+
 ### ES6的类
 
 ES6新增加了class关键字，function也可以回归本来的函数语义。我们也可以使用JS官方的基于类的标准写法，虽然类的实际运行也是基于原型。
@@ -220,3 +258,70 @@ let d = new Dog('Mitzie');
 d.speak(); // Mitzie barks.
 ```
 
+### 获取全部js固有对象
+前9个是方法,后4个是命名空间,中间是构造器
+```js
+var set = new Set()
+var objects = [
+	eval,
+	isFinite,
+	isNaN,
+	parseFloat,
+	parseInt,
+	decodeURI,
+	decodeURIComponent,
+	encodeURI,
+	encodeURIComponent,
+	Array,
+	Date,
+	RegExp,
+	Promise,
+	Proxy,
+	Map,
+	WeakMap,
+	Set,
+	WeakSet,
+	Function,
+	Boolean,
+	String,
+	Number,
+	Symbol,
+	Object,
+	Error,
+	EvalError,
+	RangeError,
+	ReferenceError,
+	SyntaxError,
+	TypeError,
+	URIError,
+	ArrayBuffer,
+	SharedArrayBuffer,
+	DataView,
+	Float32Array,
+	Float64Array,
+	Int8Array,
+	Int16Array,
+	Int32Array,
+	Uint8Array,
+	Uint16Array,
+	Uint32Array,
+	Uint8ClampedArray,
+	Atomics,
+	JSON,
+	Math,
+	Reflect
+]
+objects.forEach(o => set.add(o))
+
+for (var i = 0; i < objects.length; i++) {
+	var o = objects[i]
+	for (var p of Object.getOwnPropertyNames(o)) {
+		var d = Object.getOwnPropertyDescriptor(o, p)
+		if ((d.value !== null && typeof d.value === 'object') || typeof d.value === 'function')
+			if (!set.has(d.value)) set.add(d.value), objects.push(d.value)
+		if (d.get) if (!set.has(d.get)) set.add(d.get), objects.push(d.get)
+		if (d.set) if (!set.has(d.set)) set.add(d.set), objects.push(d.set)
+	}
+}
+console.log( objects);
+```

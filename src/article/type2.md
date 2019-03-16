@@ -37,6 +37,17 @@ javascript的对象唯一标识性
 
 为了提高抽象能力，JavaScript 的属性被设计成比别的语言更加复杂的形式，它提供了数据属性和访问器属性（getter/setter）两类。
 
+### JavaScript 对象的分类
+
+我们可以把对象分为几类
+
+1. 宿主对象（host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。比如浏览器环境下的window,node环境下的global等等
+2. 内置对象（Built-in Objects）：由 JavaScript 语言提供的对象。
+   - 固有对象（Intrinsic Objects ）：由标准规定，随着 JavaScript 运行时创建而自动创建的对象实例。
+   - 原生对象（Native Objects）：可以由用户通过 Array、RegExp 等内置构造器或者特殊语法创建的对象。
+   - 普通对象（Ordinary Objects）：由{}语法、Object 构造器或者 class 关键字定义类创建的对象，它能够被原型继承。
+
+函数对象的定义是：具有 [[call]] 私有字段的对象，构造器对象的定义是：具有私有字段 [[construct]] 的对象。
 ### JavaScript 对象的两类属性
 
 对 JavaScript 来说，属性并非只是简单的名称和值，JavaScript 用一组特征（attribute）来描述属性（property）。
@@ -110,7 +121,7 @@ console.log(b.c)  // 666
 ```
 因为b和a指向同一个内存指针。同时也说明了const常量是针对内存指针的常量，只是内存指针地址不能改变。
 
-![image](asstes/images/type1.png)
+	
 
 ### 函数传值
 
@@ -260,6 +271,7 @@ console.log( child2.name ); // newName
 console.log(child1.__proto__);  // Parent
 console.log(child2.__proto__);  // Object
 ```
+> es6之后可以用Object.getPrototypeOf()来访问非标准但许多浏览器实现的属性 \_\_proto\_\_
 #### 深拷贝
 
 深拷贝就是将对象的属性递归的拷贝到一个新的对象上，两个对象有不同的地址，不同的引用，也包括对象里的对象属性（如 object1 中的 obj 属性），两个变量之间完全独立。

@@ -292,6 +292,17 @@ JavaScript 中的数字是 64-bits 的双精度，所以加减一下，一共有
 
 这些标准中被称为“众所周知”的 Symbol，也构成了语言的一类接口形式。它们允许编写与语言结合更紧密的 API。
 
+
+除了这七种语言类型，还有一些语言的实现者更关心的规范类型。这些类型是只存在于规范里的抽象类型。它们是为了更好地描述语言的底层行为逻辑才存在的，但并不存在于实际的 js 代码中
+- List 和 Record： 用于描述函数传参过程。
+- Set：主要用于解释字符集等。
+- Completion Record：用于描述异常、跳出等语句执行过程。
+- Reference：用于描述对象属性访问、delete 等。
+- Property Descriptor：用于描述对象的属性。
+- Lexical Environment 和 Environment Record：用于描述变量和作用域。
+- Data Block：用于描述二进制数据。
+
+
 参考链接
 
 [numberInJavaScript](http://www.yangshengdonghome.com/2016/06/19/numberInJavaScript/)
