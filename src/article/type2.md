@@ -437,7 +437,7 @@ str1 instanceof String // true
 
 在上篇文章《基本类型》里说过，
 
-> 在 JavaScript 中，没有任何方法可以更改私有的 Class 属性，因此 Object.prototype.toString 是可以准确识别对象对应的基本类型的方法，它比 instanceof 更加准确。
+> 在 JavaScript 中，没有任何方法可以更改固有对象的私有Class属性(自己创建的对象可以用symbol.toStringTag修改,如果不改默认[Object Object])，因此 Object.prototype.toString 是可以准确识别对象对应的基本类型的方法，它比 instanceof 更加准确。
 
 > instanceof 的判定如果在两个环境下可能会出错。比如网页内嵌 iframe。
 
