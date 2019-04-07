@@ -52,16 +52,16 @@ javascript的对象唯一标识性
 
 对 JavaScript 来说，属性并非只是简单的名称和值，JavaScript 用一组特征（attribute）来描述属性（property）。
 
-先来说第一类属性，数据属性。数据属性具有四个特征。
+先来说第一类属性，数据属性也就是数据描述符。
 
 - value：就是属性的值。
 - writeable：决定属性能否被赋值。
 - enumerble：决定 for in 能否枚举该属性。
 - configurable：决定该属性能否被删除或者改变特征值。
 
-第二类属性是访问器属性（getter/setter）属性,它也有四个属性。
+第二类属性，访问器属性也就是存取描述符
 - getter：函数或 undefined，在取属性值时被调用。
-- getter：函数或 undefined，在设置属性值时被调用。
+- setter：函数或 undefined，在设置属性值时被调用。
 - enumerble：决定 for in 能否枚举该属性。
 - configurable：决定该属性能否被删除或者改变特征值。
 
@@ -122,7 +122,6 @@ console.log(b.c)  // 666
 因为b和a指向同一个内存指针。同时也说明了const常量是针对内存指针的常量，只是内存指针地址不能改变。
 
 	
-
 ### 函数传值
 
 参数传值是指函数调用时，给函数传递配置或运行参数的行为，包括通过call、apply 进行传值。
@@ -215,7 +214,7 @@ let object1 = {
 
 浅拷贝也存在两种情况：
 - 直接拷贝对象，也就是拷贝引用，两个变量object1 和 object2 之间还是会相互影响。
-- 只是简单的拷贝对象的第一层属性，基本类型值不再相互影响，但是对其内部的引用类型值，拷贝的任然是是其引用，内部的引用类型值还是会相互影响。
+- 只是简单的拷贝对象的第一层属性，基本类型值不再相互影响，但是对其内部的引用类型值，拷贝的仍然是其引用，内部的引用类型值还是会相互影响。
 
 ```js
 // 最简单的浅拷贝
@@ -224,8 +223,9 @@ let object2 = object1;  // 两个对象指向一个引用地址，改一个另�
 let object2 = Object.assign({}, object1)
 object1.a = 666
 object1.obj.b = 'newString'
-console.log(object2.a)  // 666
-console.log(object2.obj.b)  // 'newString'
+console.log( object2.a )  // 1
+console.log( object1.a )  // 666
+console.log( object2.obj.b )  // 'newString'
 ```
 浅拷贝存在许多问题，需要我们注意：
 
@@ -249,7 +249,7 @@ function Child() {
 Child.prototype = new Parent()
 
 let child1 = new Child()
-console.log(child1.a,child1.name); // 1 "child"
+console.log(child1.a, child1.name); // 1 "child"
 
 console.log(Parent.prototype); 
 console.log(Child.prototype); 
@@ -291,31 +291,30 @@ var object2 = Object.assign({}, object1);
 Object.getOwnPropertyNames() 返回由对象属性组成的一个数组，包括不可枚举的属性（除了使用 Symbol 的属性）。
 
 ```js
-function shallowCopyOwnProperties( source )  
-{
-    var target = {} ;
-    var keys = Object.getOwnPropertyNames( original ) ;
-    for ( var i = 0 ; i < keys.length ; i ++ ) {
-        target[ keys[ i ] ] = source[ keys[ i ] ] ;
-    }
-    return target ;
+function shallowCopyOwnProperties(source) {
+  var target = {}
+  var keys = Object.getOwnPropertyNames(original)
+  for (var i = 0; i < keys.length; i++) {
+    target[keys[i]] = source[keys[i]]
+  }
+  return target
 }
 ```
 
 3. Object.getPrototypeOf 和 Object.getOwnPropertyDescriptor 拷贝原型与描述符
 
 ```js
-function shallowCopy( source ) {
-    // 用 source 的原型创建一个对象
-    var target = Object.create( Object.getPrototypeOf( source )) ;
-    // 获取对象的所有属性
-    var keys = Object.getOwnPropertyNames( source ) ;
-    // 循环拷贝对象的所有属性
-    for ( var i = 0 ; i < keys.length ; i ++ ) {
-        // 用原属性的描述符创建新的属性
-        Object.defineProperty( target , keys[ i ] , Object.getOwnPropertyDescriptor( source , keys[ i ])) ;
-    }
-    return target ;
+function shallowCopy(source) {
+  // 用 source 的原型创建一个对象
+  var target = Object.create(Object.getPrototypeOf(source))
+  // 获取对象的所有属性
+  var keys = Object.getOwnPropertyNames(source)
+  // 循环拷贝对象的所有属性
+  for (var i = 0; i < keys.length; i++) {
+    // 用原属性的描述符创建新的属性
+    Object.defineProperty(target, keys[i], Object.getOwnPropertyDescriptor(source, keys[i]))
+  }
+  return target
 }
 ```
 
@@ -376,6 +375,22 @@ console.log(newObj); // { a: 1, b: { c: 2 } }
 优点是方便简洁，可以处理大多数业务需求。
 
 缺点是属性里有function、undefined和symbol的话会被忽略。并且如果值有循环引用对象的话会报错。
+```js
+let obj = {
+  a: 1,
+  b: {
+    c: 2,
+    d: 3,
+  },
+}
+obj.c = obj.b
+obj.e = obj.a
+obj.b.c = obj.c
+obj.b.d = obj.b
+obj.b.e = obj.b.c
+let newObj = JSON.parse(JSON.stringify(obj))
+console.log(newObj)  // 循环引用会报错
+```
 2. MessageChannel
 如果你所需拷贝的对象含有内置类型并且不包含函数，可以用MessageChannel
 

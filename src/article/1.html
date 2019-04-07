@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MVVM</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <input type="text" v-model="message" />
+      <div></div>
+      <ul>
+        <li></li>
+      </ul>
+      {{ message }}
+    </div>
+
+    <script>
+      class MVVM {
+        constructor(options) {
+          this.$el = options.el
+          this.$data = options.data
+
+          if (this.$el) {
+            //数据劫持
+            new Observer(this.$data)
+            //编译输入框和文本数据
+            new Compile(this.$el, this)
+          }
+        }
+      }
+
+      class Compile {
+        //编译类,el DOM元素,vm MVVM实例
+        constructor(el, vm) {
+          //判断el传入的是DOM元素还是ID名
+          this.el = this.isElementNode(el) ? el : document.querySelector(el)
+          this.vm = vm
+          if (this.el) {
+            //如果获取到的是元素,才开始编译
+            //避免重复渲染,把DOM移入到内存中,fragment
+            let fragment = this.node2fragment(this.el)
+            this.compileBegin(fragment)
+            this.el.appendChild(fragment)
+          }
+        }
+
+        //核心方法
+        node2fragment(el) {
+          let fragment = document.createDocumentFragment()
+          let firstChild
+          while ((firstChild = el.firstChild)) {
+            fragment.appendChild(firstChild)
+          }
+          return fragment
+        }
+        compileBegin(fragment) {
+          //拆分DOM元素,判断文本节点和元素节点
+          let childNodes = fragment.childNodes
+          //将类数组转为数组,遍历判断是否为元素节点,是元素节点递归
+          Array.from(childNodes).forEach(node => {
+            if (this.isElementNode(node)) {
+              this.compileBegin(node)
+              //元素节点
+              //判断元素节点属性有没有v-
+              this.compileElement(node)
+            } else {
+              //文本节点
+              //判断文本节点有没有{{}}
+              this.compileText(node)
+            }
+          })
+        }
+        compileElement(node) {
+          let attrs = node.attributes
+          Array.from(attrs).forEach(attr => {
+            let attrName = attr.name
+            if (this.isDirective(attrName)) {
+              //如果属性带有v-
+              //把v-domel的值编译到输入框
+              let expr = attr.value
+              let type = attrName.slice(2)
+              CompileUtil[type](node, this.vm, expr)
+            }
+          })
+        }
+        compileText(node) {
+          //这时候的DOM是未渲染的,innerHTML,innerText取不到
+          let text = node.textContent
+          let reg = /\{\{([^}]+)\}\}/g
+          if (reg.test(text)) {
+            CompileUtil['text'](node, this.vm, text)
+          }
+        }
+
+        //辅助方法
+        isElementNode(node) {
+          return node.nodeType === 1
+        }
+        isDirective(name) {
+          return name.includes('v-')
+        }
+      }
+
+      CompileUtil = {
+        getVal(vm, expr) {
+          //获取实例上对应的数据
+          console.log(expr)
+          expr = expr.split('.')
+          //函数结果return回去
+          return expr.reduce((prev, next) => {
+            return prev[next]
+          }, vm.$data)
+        },
+        getTextVal(vm, expr) {
+          return expr.replace(/\{\{([^}]+)\}\}/g, (...arguments) => {
+            return this.getVal(vm, arguments[1])
+          })
+        },
+        text(node, vm, expr) {
+          //文本处理
+          let updateFn = this.updater['textUpdater']
+          let value = this.getTextVal(vm, expr)
+          expr.replace(/\{\{([^}]+)\}\}/g, (...arguments) => {
+            new Watcher(vm, arguments[1], newValue => {
+              //如果数据变化了,文本节点需要重新获取依赖的属性更新文本中的内容
+              updateFn && updateFn(node, this.getTextVal(vm, expr))
+            })
+          })
+          updateFn && updateFn(node, value)
+        },
+        setVal(vm, expr, value) {
+          expr = expr.split('.')
+          return expr.reduce((prev, next, currentIndex) => {
+            if (currentIndex === expr.length - 1) {
+              return (prev[next] = value)
+            }
+            return prev[next]
+          }, vm.$data)
+        },
+        model(node, vm, expr) {
+          //输入框处理
+          console.log(1)
+          let updateFn = this.updater['modelUpdater']
+          new Watcher(vm, expr, newValue => {
+            updateFn && updateFn(node, this.getVal(vm, expr))
+          })
+          node.addEventListener('input', event => {
+            let newValue = event.target.value
+            this.setVal(vm, expr, newValue)
+          })
+          updateFn && updateFn(node, this.getVal(vm, expr))
+        },
+        updater: {
+          //文本更新
+          textUpdater(node, value) {
+            node.textContent = value
+            console.log(node)
+          },
+          //输入框更新
+          modelUpdater(node, value) {
+            console.log(2)
+            node.value = value
+          }
+        }
+      }
+
+      class Observer {
+        constructor(data) {
+          this.observe(data)
+        }
+        observe(data) {
+          //data不为空或者data为对象
+          if (!data || typeof data !== 'object') {
+            return
+          }
+          Object.keys(data).forEach(key => {
+            //数据响应式
+            this.defineReactive(data, key, data[key])
+            this.observe(data[key]) //深度递归
+          })
+        }
+        defineReactive(obj, key, value) {
+          //定义或者修改属性
+          let that = this
+          //每个变化的数据,都会对应一个数组,这个数组是存放所有更新的操作
+          let dep = new Dep()
+          Object.defineProperty(obj, key, {
+            enumerable: true,
+            configurable: true,
+            get() {
+              Dep.target && dep.addSub(Dep.target)
+              return value
+            },
+            set(newValue) {
+              console.log(value)
+              if (newValue != value) {
+                console.log(123)
+                that.observe(newValue) //如果是对象,继续劫持
+                value = newValue
+                dep.notify() //通知所有人,数据更新了
+              }
+            }
+          })
+        }
+      }
+
+      class Watcher {
+        constructor(vm, expr, cb) {
+          this.vm = vm
+          this.expr = expr
+          this.cb = cb
+          console.log(vm, expr)
+          this.value = this.get()
+        }
+        getVal(vm, expr) {
+          //获取实例上对应的数据
+          console.log(expr)
+          expr = expr.split('.')
+          //函数结果return回去
+          return expr.reduce((prev, next) => {
+            return prev[next]
+          }, vm.$data)
+        }
+        get() {
+          console.log(this.vm, this.expr)
+          Dep.target = this //把编译时new的Watcher实例赋给target
+          let value = this.getVal(this.vm, this.expr)
+          Dep.target = null
+          return value
+        }
+        update() {
+          let newValue = this.getVal(this.vm, this.expr)
+          let oldValue = this.vlaue
+          if (newValue !== oldValue) {
+            this.cb(newValue) //调用Watcher的cb
+          }
+        }
+      }
+
+      class Dep {
+        constructor() {
+          //订阅的数组
+          this.subs = []
+        }
+        addSub(watcher) {
+          this.subs.push(watcher)
+        }
+        notify() {
+          console.log(3)
+          this.subs.forEach(watcher => watcher.update())
+        }
+      }
+
+      let vm = new MVVM({
+        el: '#app',
+        data: {
+          message: 'hello'
+        }
+      })
+    </script>
+  </body>
+</html>
